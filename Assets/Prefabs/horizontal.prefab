@@ -117,6 +117,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2481635008503817199}
   - component: {fileID: 8590158131304975031}
+  - component: {fileID: 4326413137839981130}
+  - component: {fileID: 1458287404181499642}
   m_Layer: 0
   m_Name: horizontal
   m_TagString: Untagged
@@ -153,7 +155,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2480aad41f2554136832a019163bb87b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveDirection: {x: 0, y: 0, z: 0}
+  timeToDestroy: 5
+  sparkPrefab: {fileID: 1546390878929828, guid: 8880d66cdaa076b43be75853c26e44ea, type: 3}
   speed: 5
+--- !u!135 &4326413137839981130
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7636078866188630852}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.08806351
+  m_Center: {x: 0, y: -0.007826239, z: 0}
+--- !u!54 &1458287404181499642
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7636078866188630852}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1001 &5083276521106321111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -205,6 +258,18 @@ PrefabInstance:
     - target: {fileID: 4013845212751080, guid: 6e39ca2f8efb71e48923599f48461c26, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 135086074286028782, guid: 6e39ca2f8efb71e48923599f48461c26, type: 3}
+      propertyPath: m_Radius
+      value: 0.07510706
+      objectReference: {fileID: 0}
+    - target: {fileID: 135086074286028782, guid: 6e39ca2f8efb71e48923599f48461c26, type: 3}
+      propertyPath: m_Center.x
+      value: 0.0011755079
+      objectReference: {fileID: 0}
+    - target: {fileID: 135086074286028782, guid: 6e39ca2f8efb71e48923599f48461c26, type: 3}
+      propertyPath: m_Center.y
+      value: 0.014479913
       objectReference: {fileID: 0}
     - target: {fileID: 198188519735300084, guid: 6e39ca2f8efb71e48923599f48461c26, type: 3}
       propertyPath: InitialModule.startColor.maxColor.b

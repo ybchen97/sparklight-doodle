@@ -7,6 +7,7 @@ public class Star : MonoBehaviour {
     public Vector3 moveDirection;
     public float timeToDestroy = 5f;
     private float timer;
+    public GameObject sparkPrefab;
 
     public float speed = 5f;
      
@@ -19,11 +20,30 @@ public class Star : MonoBehaviour {
             transform.position += moveDirection * speed * Time.deltaTime;
         }
         timer += Time.deltaTime;
-        
+
         if(timer >= timeToDestroy)
         {
             Destroy(gameObject);
         }
+    }
+
+    void OnCollisionEnter(Collision col) {
+
+        print(col.gameObject.name);
+        
+        if (col.gameObject.name == "Monster") {
+
+            // Call hurt on monster
+            // col.gameObject.GetComponent<Monster>().Hurt();  
+
+            // Destroy star 
+            Destroy(gameObject);
+            
+            // Instantiate spark prefab
+            Instantiate(sparkPrefab, transform.position, Quaternion.identity);
+            print("colided with monster");
+        }
+
     }
 
 }
