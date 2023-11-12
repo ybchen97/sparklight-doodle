@@ -8,12 +8,12 @@ public class LevelManager : MonoBehaviour
 {
     public static LevelManager manager;
 
-    public GameObject gameOverScreen;
+    // public GameObject gameOverScreen;
     public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI gameOverScoreText;
-    public TextMeshProUGUI infoText;
+    // public TextMeshProUGUI gameOverScoreText;
+    // public TextMeshProUGUI infoText;
     public int score;
-    public int missPenalty = 5;
+    // public int missPenalty = 5;
 
     void Awake()
     {
@@ -25,12 +25,12 @@ public class LevelManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void GameOver()
-    {
-        Time.timeScale = 0;
-        gameOverScoreText.text = scoreText.text;
-        gameOverScreen.SetActive(true);
-    }
+    // public void GameOver()
+    // {
+    //     Time.timeScale = 0;
+    //     gameOverScoreText.text = scoreText.text;
+    //     gameOverScreen.SetActive(true);
+    // }
 
     public void ReplayGame()
     {
@@ -42,24 +42,24 @@ public class LevelManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    public void CatchFish(string name, int amount)
-    {
-        infoText.text = "You caught a " + name + "! +" + amount.ToString() + " points.";
-        infoText.gameObject.SetActive(true);
-        manager.IncreaseScore(amount);
-    }
+    // public void CatchFish(string name, int amount)
+    // {
+    //     infoText.text = "You caught a " + name + "! +" + amount.ToString() + " points.";
+    //     infoText.gameObject.SetActive(true);
+    //     manager.IncreaseScore(amount);
+    // }
 
     public void IncreaseScore(int amount)
     {
         score += amount;
-        scoreText.text = "Score: " + score.ToString();
+        scoreText.text = score.ToString();
     }
 
-    public void DeductScoreFromMiss()
-    {
-        score -= missPenalty;
-        scoreText.text = "Score: " + score.ToString();
-        infoText.text = "Miss! -" + missPenalty.ToString() + " points.";
-        infoText.gameObject.SetActive(true);
-    }
+    // public void DeductScoreFromMiss()
+    // {
+    //     score -= missPenalty;
+    //     scoreText.text = "Score: " + score.ToString();
+    //     infoText.text = "Miss! -" + missPenalty.ToString() + " points.";
+    //     infoText.gameObject.SetActive(true);
+    // }
 }

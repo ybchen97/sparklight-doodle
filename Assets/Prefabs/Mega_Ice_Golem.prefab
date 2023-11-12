@@ -458,7 +458,7 @@ GameObject:
   - component: {fileID: 6834610517749107232}
   - component: {fileID: -5851232169321485228}
   - component: {fileID: 6750461557018950378}
-  - component: {fileID: -3571853979632312014}
+  - component: {fileID: 7550764725347193459}
   m_Layer: 0
   m_Name: Mega_Ice_Golem
   m_TagString: Monster
@@ -551,7 +551,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &-3571853979632312014
+--- !u!65 &7550764725347193459
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -29,7 +29,7 @@ public class MainCharactorController : MonoBehaviour
             isAttacked = false;
         }
         cnt = cnt + 1;
-        if (cnt > 800) {
+        if (cnt > 400) {
             mainCharacterAnimation.SetInteger("animation", 1);
         }
         
@@ -56,7 +56,8 @@ public class MainCharactorController : MonoBehaviour
         if (heartIndex == 0){
             // restart game 
             heartArray[heartIndex].SetActive(false);
-            restartButton.gameObject.SetActive(true);
+            // restartButton.gameObject.SetActive(true);
+            RestartGame();
         }
         else {
             heartArray[heartIndex].SetActive(false);

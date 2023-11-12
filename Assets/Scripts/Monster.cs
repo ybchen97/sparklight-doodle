@@ -5,13 +5,19 @@ public class Monster : MonoBehaviour
 {
     public float spawnRate = 1.0f;
     public float scale = 1.0f;
-    public float speed = 1.0f;
-    public int health = 3;
+    public float speed = 0.6f;
+    public int health = 1;
     public int score = 10;
     public string fishName;
     public Vector3 forward;
     public float rotateSpeed = 8.0f; 
     Transform target;
+    // public GameObject symbol;
+
+    // public void SetSymbol(GameObject s)
+    // {
+    //     symbol = s;
+    // }
 
     public void Awake()
     {
@@ -29,10 +35,6 @@ public class Monster : MonoBehaviour
     {
         RotateTowardsTarget();
         transform.position += transform.forward * Time.deltaTime * speed;
-    }
-
-    void FixedUpdate()
-    {
     }
 
     void RotateTowardsTarget()
@@ -76,6 +78,7 @@ public class Monster : MonoBehaviour
     {
         GetComponent<Animator>().SetInteger("animation", 5);
         MonsterSpawner.manager.DecrementMonsterCount();
+        LevelManager.manager.IncreaseScore(score);
         // float multiplier = 1 + 1 / speed;
         // LevelManager.manager.CatchFish(fishName,  (int)(score * multiplier));
         Destroy(gameObject, 1.5f);

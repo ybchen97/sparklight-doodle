@@ -11,6 +11,8 @@ public class MonsterSpawner : MonoBehaviour
 
     public GameObject[] monsterPrefabs;
     float[] monsterProbs;
+    public GameObject[] symbolPrefabs;
+    float[] symbolProbs;
     public int maxMonsterCount = 10;
     public int initialWaveCount = 5;
     public int monsterCount;
@@ -74,6 +76,13 @@ public class MonsterSpawner : MonoBehaviour
             monsterProbs[i] = monsterPrefabs[0].GetComponent<Monster>().scale / monsterTotal;
         }
 
+        float symbolProb = 1.0f / symbolPrefabs.Length;
+        symbolProbs = new float[symbolPrefabs.Length];
+        for (int i = 0; i < symbolPrefabs.Length; i++)
+        {
+            symbolProbs[i] = symbolProb;
+        }
+
         // Spawn initial wave of monsters
         while (monsterCount < initialWaveCount)
         {
@@ -100,10 +109,16 @@ public class MonsterSpawner : MonoBehaviour
 
     private void createMonsterObject(int idx)
     {
+        // Create monster
         GameObject newMonster = Instantiate(monsterPrefabs[idx], transform);
         newMonster.transform.position = GetRandomLocation();
         newMonster.transform.eulerAngles = new Vector3(0f, Random.Range(0f, 360f), 0f);
-        // Vector3 monsterForward = newMonster.GetComponent<Monster>().forward;
-        // newMonster.GetComponent<Monster>().forward = newMonster.transform.rotation * monsterForward;
+
+        // Create symbol for monster
+        int symbolIdx = GetRandomMonster(symbolProbs);
+        GameObject newSymbol = Instantiate(symbolPrefabs[symbolIdx], transform);
+        newSymbol.transform.position = newMonster.transform.position + new Vector3(0f, 1f, 0f);
+        newSymbol.transform.parent = newMonster.transform;
+        // newMonster.GetComponent<Monster>().SetSymbol(newSymbol);
     }
 }

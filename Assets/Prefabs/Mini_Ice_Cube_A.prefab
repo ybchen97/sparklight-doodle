@@ -194,7 +194,7 @@ GameObject:
   - component: {fileID: 8314235415221954089}
   - component: {fileID: -398906073611084492}
   - component: {fileID: -5544967640859027235}
-  - component: {fileID: 4502155068654450552}
+  - component: {fileID: 8985328398740581116}
   m_Layer: 0
   m_Name: Mini_Ice_Cube_A
   m_TagString: Monster
@@ -287,7 +287,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &4502155068654450552
+--- !u!65 &8985328398740581116
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

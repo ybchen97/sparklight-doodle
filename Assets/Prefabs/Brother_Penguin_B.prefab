@@ -460,7 +460,7 @@ GameObject:
   - component: {fileID: 1629042400879363522}
   - component: {fileID: 4788100455344846175}
   - component: {fileID: 7075018511102220608}
-  - component: {fileID: 6372347437264609996}
+  - component: {fileID: 5286711631578139776}
   m_Layer: 0
   m_Name: Brother_Penguin_B
   m_TagString: Monster
@@ -553,7 +553,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &6372347437264609996
+--- !u!65 &5286711631578139776
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

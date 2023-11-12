@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1137263283194369015}
   - component: {fileID: 2340953290090213121}
   - component: {fileID: 3551218150310893295}
-  - component: {fileID: -339644257184115760}
+  - component: {fileID: 777579636880925374}
   m_Layer: 0
   m_Name: Mini_Ice_Bear_C
   m_TagString: Monster
@@ -105,7 +105,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &-339644257184115760
+--- !u!65 &777579636880925374
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

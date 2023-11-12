@@ -76,7 +76,7 @@ GameObject:
   - component: {fileID: 2451883781699277252}
   - component: {fileID: -2004331695977140838}
   - component: {fileID: -3969437995391497953}
-  - component: {fileID: 8790352279233390206}
+  - component: {fileID: -5798495807544627273}
   m_Layer: 0
   m_Name: Ice_Starflake_B
   m_TagString: Monster
@@ -169,7 +169,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &8790352279233390206
+--- !u!65 &-5798495807544627273
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

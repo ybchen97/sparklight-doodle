@@ -10,9 +10,13 @@ public class Star : MonoBehaviour {
     public GameObject sparkPrefab;
 
     public float speed = 5f;
+    private float initY;
     
     public void SetDirection(Vector3 direction) {
         moveDirection = direction.normalized;
+        moveDirection[1] = 0f;
+        initY = transform.position[1];
+
     }
 
     void Update() {
@@ -25,16 +29,17 @@ public class Star : MonoBehaviour {
         {
             Destroy(gameObject);
         }
+        transform.position = new Vector3(transform.position[0], initY, transform.position[2]);
     }
 
     void OnCollisionEnter(Collision col) {
 
         print(col.gameObject.name);
         
-        if (col.gameObject.name == "Monster") {
+        if (col.gameObject.tag == "Monster") {
 
             // Call hurt on monster
-            // col.gameObject.GetComponent<Monster>().Hurt();  
+            col.gameObject.GetComponent<Monster>().TakeDamage();  
 
             // Destroy star 
             Destroy(gameObject);

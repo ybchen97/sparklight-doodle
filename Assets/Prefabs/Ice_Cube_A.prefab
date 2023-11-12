@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 5562919250985871227}
   - component: {fileID: -5209616693405781202}
   - component: {fileID: 4529473631278571804}
-  - component: {fileID: -1806709625065088414}
+  - component: {fileID: -957296969773485371}
   m_Layer: 0
   m_Name: Ice_Cube_A
   m_TagString: Monster
@@ -357,7 +357,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &-1806709625065088414
+--- !u!65 &-957296969773485371
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
