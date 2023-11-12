@@ -30,6 +30,7 @@ public class MainCharactorController : MonoBehaviour
     }
 
     void OnCollisionEnter(Collision col) {
+        print("collisionnnn");
 
         print(col.gameObject.name);
         
