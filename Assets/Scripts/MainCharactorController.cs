@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class MainCharactorController : MonoBehaviour
 {
     // public AnimatorController animatorControllerScript;
     public Animator mainCharacterAnimation;
-    public GameObject cube;
     public Button restartButton;
     bool isAttacked = false;
     public GameObject[] heartArray;
@@ -45,7 +45,7 @@ public class MainCharactorController : MonoBehaviour
 
             // main character movement
             mainCharacterAnimation.SetInteger("animation", 4);
-            Destroy(cube);
+            col.gameObject.GetComponent<Monster>().Attack();
             isAttacked = true;
             heartLeft = heartLeft - 1;
             removeAHeart(heartLeft);
@@ -56,16 +56,16 @@ public class MainCharactorController : MonoBehaviour
         if (heartIndex == 0){
             // restart game 
             heartArray[heartIndex].SetActive(false);
-            // restartButton.gameObject.SetActive(true);
+            restartButton.gameObject.SetActive(true);
         }
         else {
             heartArray[heartIndex].SetActive(false);
         }
     }
 
-    // public void RestartGame()
-    // {
-    //     // Reload the current scene
-    //     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-    // }
+    public void RestartGame()
+    {
+        // Reload the current scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
 }

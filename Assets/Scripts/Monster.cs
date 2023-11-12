@@ -65,13 +65,20 @@ public class Monster : MonoBehaviour
         }
     }
 
-    void Die()
+    public void Attack()
+    {
+        GetComponent<Animator>().SetInteger("animation", 3);
+        MonsterSpawner.manager.DecrementMonsterCount();
+        Destroy(gameObject, 1f);
+    }
+
+    public void Die()
     {
         GetComponent<Animator>().SetInteger("animation", 5);
         MonsterSpawner.manager.DecrementMonsterCount();
-        float multiplier = 1 + 1 / speed;
-        LevelManager.manager.CatchFish(fishName,  (int)(score * multiplier));
-        Destroy(gameObject, 2f);
+        // float multiplier = 1 + 1 / speed;
+        // LevelManager.manager.CatchFish(fishName,  (int)(score * multiplier));
+        Destroy(gameObject, 1.5f);
     }
 
 }
