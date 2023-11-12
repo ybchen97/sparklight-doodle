@@ -1,5 +1,7 @@
 # SparkLight Doodle - Immerse The Bay Hackathon 2023
 
+![Banner](banner.jpg "Banner Image")  
+
 SparkLight Doodle is a simple hand-tracking based VR game where you kill enemies
 by drawning the symbol that appears over their heads.
 
