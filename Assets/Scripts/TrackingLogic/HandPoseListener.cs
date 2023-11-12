@@ -16,6 +16,9 @@ public class HandPoseListener : MonoBehaviour
     DrawState _state = DrawState.EMPTY;
     public DrawState State { get => _state; }
 
+    ClassifyType _detectionType = ClassifyType.UNDEFINED;
+    public ClassifyType DetectionType { get => _detectionType; }
+
     readonly DetectedHand _leftHand = new DetectedHand();
     readonly DetectedHand _rightHand = new DetectedHand();
 
@@ -127,9 +130,9 @@ public class HandPoseListener : MonoBehaviour
     private void AddDrawingPoint(Finger finger, Hand hand)
     {
         Pose palmPose = hand.GetPalmPose();
-        Vector3 transversePositiveAxis = Vector3.Normalize(Vector3.Cross(hand.WristPosition - hand.PalmPosition, hand.PalmNormal));
+        Vector3 transversePositiveAxis = Vector3.Normalize(Vector3.Cross(hand.PalmNormal, hand.WristPosition - hand.PalmPosition));
         Vector3 palmNormal = Vector3.Normalize(hand.PalmNormal);
-        Vector3 palmToWrist = Vector3.Normalize(Vector3.Cross(palmNormal, transversePositiveAxis));
+        Vector3 palmToWrist = Vector3.Normalize(Vector3.Cross(transversePositiveAxis, palmNormal));
         Vector3 palmPosition = hand.PalmPosition;
         Vector3 palmDirection = hand.Direction;
         Vector3 rayBase = finger.bones[(int)Bone.BoneType.TYPE_DISTAL].PrevJoint;
@@ -171,7 +174,13 @@ public class HandPoseListener : MonoBehaviour
         if (tentativeState == DrawState.EMPTY && _state == DrawState.DRAWING)
         {
             ClassifyDrawing();
-            resultingState = DrawState.CLASSIFYING;
+            if (_detectionType == ClassifyType.UNDEFINED)
+            {
+                _state = DrawState.EMPTY;
+                _drawPoints.Clear();
+                debugCube.transform.position = new Vector3(-1f, -1f, -1f);
+            }
+            resultingState = DrawState.CLASSIFY_FINISHED;
         }
         if (tentativeState == DrawState.EMPTY && _state == DrawState.SENDING)
         {
@@ -196,7 +205,39 @@ public class HandPoseListener : MonoBehaviour
     private void ClassifyDrawing()
     {
         List<Vector2> coords = GetDrawnImageCoordinates();
-        StartCoroutine(GetRemoteClassification(coords));
+        // Quest can only connect to the localhost of the computer via cable, but the
+        // only port has been taken up by the UltraLeap
+        //  StartCoroutine(GetRemoteClassification(coords));
+        if (coords.Count <= 5)
+        {
+            _detectionType = ClassifyType.UNDEFINED;
+            OnInvalidDraw();
+            return;
+        }
+        Vector2 direction = Vector3.Normalize(coords[coords.Count - 1] - coords[0]);
+        float sumDistance = 0f;
+        for (int i = 1; i < coords.Count - 1; i++)
+        {
+            Vector2 along = direction * Vector2.Dot(coords[i] - coords[0], direction);
+            Vector3 normal = Vector3.Normalize(Vector3.Cross(new Vector3(along.x, along.y, 0.0f), new Vector3(0f, 0f, 1f)));
+            sumDistance += Vector2.Dot(coords[i] - coords[0], new Vector2(normal.x, normal.y));
+        }
+        float avgDistance = sumDistance / (coords.Count - 2);
+        print(avgDistance);
+        if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y))
+        {
+            print("VERTICAL!");
+            _detectionType = ClassifyType.VERTICAL;
+        } else {
+            if (avgDistance > 5)
+            {
+                print("Hat!");
+                _detectionType = ClassifyType.UP_HAT;
+                return;
+            }
+            print("HORIZONTAL!");
+            _detectionType = ClassifyType.HORIZONTAL;
+        }
     }
 
     private IEnumerator GetRemoteClassification(List<Vector2> coords)
@@ -277,9 +318,9 @@ public class HandPoseListener : MonoBehaviour
     private float[] GetDistancesBetweenFingerTipAndPalm(Finger finger, Hand hand)
     {
         Vector3 palmPosition = hand.PalmPosition;
-        Vector3 transversePositiveAxis = Vector3.Normalize(Vector3.Cross(hand.WristPosition - hand.PalmPosition, hand.PalmNormal));
+        Vector3 transversePositiveAxis = Vector3.Normalize(Vector3.Cross(hand.PalmNormal, hand.WristPosition - hand.PalmPosition));
         Vector3 palmNormal = Vector3.Normalize(hand.PalmNormal);
-        Vector3 palmToWrist = Vector3.Normalize(Vector3.Cross(palmNormal, transversePositiveAxis));
+        Vector3 palmToWrist = Vector3.Normalize(Vector3.Cross(transversePositiveAxis, palmNormal));
         Vector3 fingerTip = finger.TipPosition;
         float verticalDistance = Vector3.Dot(fingerTip - palmPosition, palmNormal);
         float wristDistance = Vector3.Dot(fingerTip - palmPosition, palmToWrist);
@@ -325,6 +366,32 @@ public class HandPoseListener : MonoBehaviour
         if (leapProvider != null)
         {
             leapProvider.OnUpdateFrame -= OnUpdateFrame;
+        }
+    }
+
+    public Vector3 GetPalmPose()
+    {
+
+        if (_leftHand.LastDetected != null)
+        {
+            return _leftHand.LastDetected.PalmPosition;
+        }
+        else
+        {
+            return new Vector3(0, 0, 0);
+        }
+    }
+
+    public Vector3 GetHandDirection()
+    {
+
+        if (_leftHand.LastDetected != null)
+        {
+            return (_leftHand.LastDetected.PalmPosition - _leftHand.LastDetected.WristPosition).normalized;
+        }
+        else
+        {
+            return new Vector3(0, 0, 0);
         }
     }
 }

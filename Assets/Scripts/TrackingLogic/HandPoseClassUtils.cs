@@ -11,6 +11,14 @@ public class DetectedHand
     public Hand? Current { get => _current; set => _current = value; }
 }
 
+public enum ClassifyType
+{
+    UNDEFINED,
+    VERTICAL,
+    HORIZONTAL,
+    UP_HAT,
+}
+
 public enum DrawState
 {
     EMPTY,
