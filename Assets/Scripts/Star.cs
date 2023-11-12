@@ -10,7 +10,7 @@ public class Star : MonoBehaviour {
     public GameObject sparkPrefab;
 
     public float speed = 5f;
-     
+    
     public void SetDirection(Vector3 direction) {
         moveDirection = direction.normalized;
     }

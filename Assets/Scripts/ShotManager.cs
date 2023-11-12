@@ -8,7 +8,14 @@ public class ShotManager : MonoBehaviour {
     
     public GameObject starPrefab;
 
+    public GameObject handManager;
+
+    private Vector3 palmPosition;
+    private Vector3 shotDirection; 
+
     public bool debugMode;
+
+    public float timer=0;
 
     public void Shoot(Vector3 direction, Vector3 position) {
         
@@ -17,6 +24,18 @@ public class ShotManager : MonoBehaviour {
         if (script != null) {
             script.SetDirection(direction);
         }
+    }
+
+    public void handShot(){
+      Shoot(shotDirection, palmPosition);
+    }
+
+    private void updateShotParameter(){
+      HandPoseListener _handPoseListener = handManager.GetComponent<HandPoseListener>();
+      palmPosition = _handPoseListener.GetPalmPose();
+      shotDirection = _handPoseListener.GetHandDirection();
+      print("shotDirection");
+      print( shotDirection);
     }
 
     void DebugShoot() {
@@ -28,14 +47,27 @@ public class ShotManager : MonoBehaviour {
         script.SetDirection(direction);
         }
 
-  }
+    }
+
+    void Start(){
+    }
 
     void Update() {
-    if (debugMode) {
-      if (Input.GetKeyDown(KeyCode.Space)) {
-        DebugShoot();
+      timer += Time.deltaTime;
+      if (debugMode) {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+          DebugShoot();
+        }
       }
+      if(timer>2.0f){
+        updateShotParameter();
+        handShot();
+        timer = 0.0f;
+      }
+      
     }
-  }
+
+
+    
 
 }

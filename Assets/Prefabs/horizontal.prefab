@@ -156,9 +156,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveDirection: {x: 0, y: 0, z: 0}
-  timeToDestroy: 5
+  timeToDestroy: 20
   sparkPrefab: {fileID: 1546390878929828, guid: 8880d66cdaa076b43be75853c26e44ea, type: 3}
-  speed: 5
+  speed: 1
 --- !u!135 &4326413137839981130
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -202,7 +202,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -218,6 +218,10 @@ PrefabInstance:
     - target: {fileID: 1453648102191072, guid: 6e39ca2f8efb71e48923599f48461c26, type: 3}
       propertyPath: m_Name
       value: Projectile 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1453648102191072, guid: 6e39ca2f8efb71e48923599f48461c26, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4013845212751080, guid: 6e39ca2f8efb71e48923599f48461c26, type: 3}
       propertyPath: m_LocalPosition.x

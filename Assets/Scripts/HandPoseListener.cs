@@ -222,4 +222,24 @@ public class HandPoseListener : MonoBehaviour
             leapProvider.OnUpdateFrame -= OnUpdateFrame;
         }
     }
+
+    public Vector3 GetPalmPose(){
+        
+        if(_leftHand.LastDetected!= null){
+            return _leftHand.LastDetected.PalmPosition;
+        }
+        else{
+            return new Vector3(0,0,0);
+        }
+    }
+    
+    public Vector3 GetHandDirection(){
+        
+        if(_leftHand.LastDetected!= null){
+            return (_leftHand.LastDetected.PalmPosition - _leftHand.LastDetected.WristPosition).normalized;
+        }
+        else{
+            return new Vector3(0,0,0);
+        }
+    }
 }
