@@ -11991,7 +11991,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1643250961272311037, guid: 71670f58f7d125d44b78afb5257c14fe, type: 3}
       propertyPath: m_Name
-      value: Ice_Bear_B
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1643250961272311037, guid: 71670f58f7d125d44b78afb5257c14fe, type: 3}
       propertyPath: m_IsActive
