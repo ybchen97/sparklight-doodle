@@ -116,3 +116,4 @@ public class DemoShooting : MonoBehaviour
         obj.transform.localRotation = Quaternion.Lerp(obj.transform.rotation, rotation, 1);
     }
 }
+
