@@ -7,11 +7,10 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 0
     path: Assets/Scenes/MainLevel.unity
-    guid: 045a6c26b0b9444c1a01858a12a7f460
+    guid: 7040347f6f55c4eddb5daa935ba9ef32
   - enabled: 1
-    path: Assets/Scenes/Christmas_Log_Village_Day.unity
-    guid: 7a83098aa1a1946cb8a8f0833dcd7f24
+    path: Assets/Sandbox/Yuanbo/Christmas_Log_Village_Day.unity
+    guid: ae02ac706446d4c219b33998aca837d8
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 40edf8910f30144198a70f58696d7c78, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 1860230ca823740deb5920584ad3d741, type: 2}
-    com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 9e8eb28d334704446b692fe212864479, type: 2}

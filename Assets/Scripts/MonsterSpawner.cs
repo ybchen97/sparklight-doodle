@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class MonsterSpawner : MonoBehaviour
 {
@@ -11,10 +12,12 @@ public class MonsterSpawner : MonoBehaviour
     public GameObject[] monsterPrefabs;
     float[] monsterProbs;
     public int maxMonsterCount = 10;
+    public int initialWaveCount = 5;
     public int monsterCount;
-    float xRange = 5f;
+    float xRange = 20f;
     // float yRange = 0.1f;
-    float zRange = 5f;
+    float zRange = 20f;
+    float clearRadius = 10f;
 
     private void Awake()
     {
@@ -48,11 +51,12 @@ public class MonsterSpawner : MonoBehaviour
 
     public Vector3 GetRandomLocation()
     {
-        Vector3 perturbation = new(
-            Random.Range(-xRange, xRange),
-            0.5f,
-            Random.Range(-zRange, zRange));
-        return perturbation;
+        Vector3 loc = new(Random.Range(-xRange, xRange), 0.0f, Random.Range(-zRange, zRange));
+        while (loc.magnitude < clearRadius)
+        {
+            loc = new(Random.Range(-xRange, xRange), 0.0f, Random.Range(-zRange, zRange));
+        }
+        return loc;
     }
 
     // Start is called before the first frame update
@@ -71,7 +75,7 @@ public class MonsterSpawner : MonoBehaviour
         }
 
         // Spawn initial wave of monsters
-        while (monsterCount < maxMonsterCount)
+        while (monsterCount < initialWaveCount)
         {
             int idx = GetRandomMonster(monsterProbs);
             createMonsterObject(idx);
