@@ -6,6 +6,9 @@ public class MainCharactorController : MonoBehaviour
 {
     // public AnimatorController animatorControllerScript;
     public Animator mainCharacterAnimation;
+    public GameObject cube;
+    bool isAttacked = false;
+    int cnt = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,6 +18,14 @@ public class MainCharactorController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isAttacked) {
+            cnt = 0;
+            isAttacked = false;
+        }
+        cnt = cnt + 1;
+        if (cnt > 800) {
+            mainCharacterAnimation.SetInteger("animation", 1);
+        }
         
     }
 
@@ -22,16 +33,13 @@ public class MainCharactorController : MonoBehaviour
 
         print(col.gameObject.name);
         
-        if (col.gameObject.name == "Monster") {
+        if (col.gameObject.tag == "Monster") {
             // TODO: remove a heart
 
             // main character movement
             mainCharacterAnimation.SetInteger("animation", 4);
-            for(int cnt = 0; cnt <= 30; cnt ++)
-            {
-                print("cnt is" + cnt);
-            }
-            mainCharacterAnimation.SetInteger("animation", 1);
+            Destroy(cube);
+            isAttacked = true;
         }
     }
 }
