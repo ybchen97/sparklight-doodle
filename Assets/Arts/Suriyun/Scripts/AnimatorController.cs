@@ -32,6 +32,7 @@ namespace Suriyun
         }
         public void SetInt(string parameter = "key,value")
         {
+            print("setInt triggered, parameter" + parameter);
             char[] separator = { ',', ';' };
             string[] param = parameter.Split(separator);
 

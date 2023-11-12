@@ -5,13 +5,16 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Samples/Ultraleap Tracking/6.12.1/Interaction Examples/1. XR Examples/2.
       Building Blocks/1. Basics/1. Capsule Hands.unity
     guid: b8716ea72d45ecc4f9d690226f6664d1
   - enabled: 0
     path: Assets/Scenes/Christmas_Log_Village_Day.unity
     guid: 7a83098aa1a1946cb8a8f0833dcd7f24
+  - enabled: 1
+    path: Assets/Scenes/MainLevel.unity
+    guid: 59aa7e3dbbbb7440087d5d2a404e492c
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 40edf8910f30144198a70f58696d7c78, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 1860230ca823740deb5920584ad3d741, type: 2}

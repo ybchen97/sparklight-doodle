@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3438392778387413182}
   m_Layer: 0
   m_Name: Monster1
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c7b63250024a54d3080d32b57086bb38, type: 2}
+  - {fileID: 2100000, guid: 37a40c8dba67943798c37a8c91a51532, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6748381943431151672}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1e5a95f94dfe49af8bdcfd9b774c42b, type: 3}
+  m_Script: {fileID: 11500000, guid: 48b5e7a3fd3864841aab9a04c0e2923b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spawnRate: 1

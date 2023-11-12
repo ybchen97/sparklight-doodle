@@ -66,14 +66,15 @@ public class Monster : MonoBehaviour
 
     void Die()
     {
-        MonsterSpawner.manager.DecrementMonsterCount();
         float multiplier = 1;
-        if (gameObject.GetComponent<FishMovement>() != null)
-        {
-            multiplier = 1 + 1 / gameObject.GetComponent<FishMovement>().speed;
-        }
-        LevelManager.manager.CatchFish(fishName,  (int)(score * multiplier));
-        Destroy(gameObject);
+    //     MonsterSpawner.manager.DecrementMonsterCount();
+    //     float multiplier = 1;
+    //     if (gameObject.GetComponent<FishMovement>() != null)
+    //     {
+    //         multiplier = 1 + 1 / gameObject.GetComponent<FishMovement>().speed;
+    //     }
+    //     LevelManager.manager.CatchFish(fishName,  (int)(score * multiplier));
+    //     Destroy(gameObject);
     }
 
 }
