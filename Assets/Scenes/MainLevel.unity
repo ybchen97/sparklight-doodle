@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44129792, g: 0.49010062, b: 0.570152, a: 1}
+  m_IndirectSpecularColor: {r: 0.43874443, g: 0.48693198, b: 0.5675999, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -396,7 +396,7 @@ PrefabInstance:
     - target: {fileID: 6102045132944367043, guid: 8801e643e53a19d488f5168057473354, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 77df0efee14c24790b1339ed7ef7f6b9, type: 2}
+      objectReference: {fileID: 2100000, guid: 99a99d04fd376460ea634570253bfb6c, type: 2}
     - target: {fileID: 6102045132944367069, guid: 8801e643e53a19d488f5168057473354, type: 3}
       propertyPath: m_LocalScale.x
       value: 10
@@ -512,7 +512,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1733183396}
-  - component: {fileID: 1733183395}
+  - component: {fileID: 1733183397}
   m_Layer: 0
   m_Name: MonsterSpawner
   m_TagString: Untagged
@@ -520,26 +520,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1733183395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1733183394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 471b8ce72cdb54c818443803488e4057, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  spawnWaitInterval: 2
-  monsterPrefabs:
-  - {fileID: 6748381943431151672, guid: b66a9ff08edb24d4ea4b31c8f08ad0fa, type: 3}
-  - {fileID: 1300403538183984631, guid: c2f6b93966de54d4e9bb82f2b092ad00, type: 3}
-  - {fileID: 8044676460118576945, guid: 487402a14d82d4ac2a65107abfd61f84, type: 3}
-  - {fileID: 6190929710561723100, guid: bdc2fc7141967432d968fe282335f224, type: 3}
-  maxMonsterCount: 10
-  monsterCount: 0
 --- !u!4 &1733183396
 Transform:
   m_ObjectHideFlags: 0
@@ -555,6 +535,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1733183397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733183394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78eddb1beab9d465792209c7961fd644, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnWaitInterval: 2
+  monsterPrefabs:
+  - {fileID: 6748381943431151672, guid: b66a9ff08edb24d4ea4b31c8f08ad0fa, type: 3}
+  maxMonsterCount: 10
+  monsterCount: 0
 --- !u!1 &1763604294
 GameObject:
   m_ObjectHideFlags: 0
