@@ -15,7 +15,8 @@ public enum DrawState
 {
     EMPTY,
     DRAWING,
-    DRAWING_FINISHED,
+    CLASSIFYING,
+    CLASSIFY_FINISHED,
     SENDING,
     COOLING_DOWN,
 }

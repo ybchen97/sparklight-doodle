@@ -1,0 +1,4 @@
+0 horizontal_line
+1 vertical_line
+2 up_hat
+3 random
