@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Leap;
 using Leap.Unity;
+using System;
+using UnityEngine.Networking;
 
 public class HandPoseListener : MonoBehaviour
 {
@@ -19,6 +21,20 @@ public class HandPoseListener : MonoBehaviour
 
     float _coolDownTime;
     GameObject debugCube;
+
+    List<Vector3> _drawPoints = new List<Vector3>();
+
+    // Vectors in the following coordinate (relative to the center of the palm) :
+    // (0): Palm Center to Wrist
+    // (1): Cross (0), (2)
+    // (2): Palm Normal
+    public List<Vector3> DrawPoints { get => _drawPoints; }
+
+    // Max (x, y)
+    Vector2 topLeft = new Vector2(float.MinValue, float.MinValue);
+    // Min (x, y)
+    Vector2 bottomRight = new Vector2(float.MaxValue, float.MaxValue);
+
     // Get an encapsulation class of:
     // 1. LastDetected: the Hand object last detected (only null before the first detection);
     // 2. Current: the Hand object currently detected (could be null when no hand is detected currently);
@@ -74,7 +90,8 @@ public class HandPoseListener : MonoBehaviour
         {
             if (_state == DrawState.DRAWING)
             {
-                _state = DrawState.DRAWING_FINISHED;
+                ClassifyDrawing();
+                _state = DrawState.CLASSIFYING;
             }
             if (_state == DrawState.SENDING)
             {
@@ -85,11 +102,10 @@ public class HandPoseListener : MonoBehaviour
             return;
         }
         debugCube.SetActive(true);
-        debugCube.transform.position = leftHand.WristPosition;
-        DrawState tentativeState = DrawState.DRAWING_FINISHED;
+        DrawState tentativeState = DrawState.EMPTY;
         if (IsFingerTouchingPalm(rightHand.Fingers[1], leftHand))
         {
-            print("overlapped");
+            //print("overlapped");
             tentativeState = DrawState.DRAWING;
         }
         int count = 0;
@@ -102,7 +118,7 @@ public class HandPoseListener : MonoBehaviour
         }
         if (count >= 2)
         {
-            print("overlapped: " + count);
+            //print("overlapped: " + count);
             tentativeState = DrawState.SENDING;
         }
         ProcessDrawStateChange(tentativeState, rightHand, leftHand);
@@ -111,10 +127,9 @@ public class HandPoseListener : MonoBehaviour
     private void AddDrawingPoint(Finger finger, Hand hand)
     {
         Pose palmPose = hand.GetPalmPose();
-        Vector3 transversePositiveAxis = Vector3.Normalize(Vector3.Cross(hand.WristPosition - hand.PalmPosition, hand.PalmNormal));
+        Vector3 transversePositiveAxis = Vector3.Normalize(Vector3.Cross(hand.PalmNormal, hand.WristPosition - hand.PalmPosition));
         Vector3 palmNormal = Vector3.Normalize(hand.PalmNormal);
-        Vector3 palmToWrist = Vector3.Normalize(Vector3.Cross(palmNormal, transversePositiveAxis));
-        //Vector3 palmNormal = Vector3.Normalize(hand.PalmNormal);
+        Vector3 palmToWrist = Vector3.Normalize(Vector3.Cross(transversePositiveAxis, palmNormal));
         Vector3 palmPosition = hand.PalmPosition;
         Vector3 palmDirection = hand.Direction;
         Vector3 rayBase = finger.bones[(int)Bone.BoneType.TYPE_DISTAL].PrevJoint;
@@ -127,22 +142,38 @@ public class HandPoseListener : MonoBehaviour
         }
         Vector3 intersection = a / b * rayDirection + rayBase;
         debugCube.transform.position = intersection;
+        Vector3 relativeIntersection = intersection - palmPosition;
+        float x = Vector3.Dot(relativeIntersection, palmToWrist);
+        float y = Vector3.Dot(relativeIntersection, transversePositiveAxis);
+        float z = Vector3.Dot(relativeIntersection, palmNormal);
+        if (_drawPoints.Count == 0 ||
+            _drawPoints.Count > 0 && Vector3.Distance(new Vector3(x, y, z), _drawPoints[_drawPoints.Count - 1]) >= 0.001)
+        {
+            _drawPoints.Add(new Vector3(x, y, z));
+            float distance = Vector3.Distance(palmPosition, hand.WristPosition);
+            topLeft.x = Mathf.Max(topLeft.x, distance);
+            topLeft.y = Mathf.Max(topLeft.y, hand.PalmWidth);
+            bottomRight.x = Mathf.Min(bottomRight.x, -hand.PalmWidth);
+            bottomRight.y = Mathf.Min(bottomRight.y, -hand.PalmWidth);
+        }
     }
 
     private void Send()
     {
         print("sent!");
+        _drawPoints.Clear();
         debugCube.transform.position = new Vector3(-1f, -1f, -1f);
     }
 
     private void ProcessDrawStateChange(DrawState tentativeState, Hand rightHand, Hand hand)
     {
         DrawState resultingState = _state;
-        if (tentativeState == DrawState.DRAWING_FINISHED && _state == DrawState.DRAWING)
+        if (tentativeState == DrawState.EMPTY && _state == DrawState.DRAWING)
         {
-            resultingState = DrawState.DRAWING_FINISHED;
+            ClassifyDrawing();
+            resultingState = DrawState.CLASSIFYING;
         }
-        if (tentativeState == DrawState.DRAWING_FINISHED && _state == DrawState.SENDING)
+        if (tentativeState == DrawState.EMPTY && _state == DrawState.SENDING)
         {
             Send();
             resultingState = DrawState.COOLING_DOWN;
@@ -151,7 +182,7 @@ public class HandPoseListener : MonoBehaviour
         {
             resultingState = DrawState.DRAWING;
         }
-        if (tentativeState == DrawState.SENDING && _state == DrawState.DRAWING_FINISHED)
+        if (tentativeState == DrawState.SENDING && _state == DrawState.CLASSIFY_FINISHED)
         {
             resultingState = DrawState.SENDING;
         }
@@ -162,6 +193,83 @@ public class HandPoseListener : MonoBehaviour
         }
     }
 
+    private void ClassifyDrawing()
+    {
+        List<Vector2> coords = GetDrawnImageCoordinates();
+        StartCoroutine(GetRemoteClassification(coords));
+    }
+
+    private IEnumerator GetRemoteClassification(List<Vector2> coords)
+    {
+        string stringCoords = "";
+        for (int i = 0; i < coords.Count; i++)
+        {
+            Vector2 coord = coords[i];
+            stringCoords += coord.x + " " + coord.y;
+            if (i < coords.Count - 1)
+            {
+                stringCoords += ",";
+            }
+        }
+        string uri = "http://localhost:4000";
+        print(stringCoords);
+        using (UnityWebRequest webRequest = UnityWebRequest.Post(uri, "{ \"coords\": \"" + stringCoords + "\" }", "application/json"))
+        {
+            // Request and wait for the desired page.
+            yield return webRequest.SendWebRequest();
+
+            switch (webRequest.result)
+            {
+                case UnityWebRequest.Result.ConnectionError:
+                case UnityWebRequest.Result.DataProcessingError:
+                    Debug.LogError("Error: " + webRequest.error);
+                    break;
+                case UnityWebRequest.Result.ProtocolError:
+                    Debug.LogError("HTTP Error: " + webRequest.error);
+                    break;
+                case UnityWebRequest.Result.Success:
+                    print(webRequest.downloadHandler.text);
+                    _state = DrawState.CLASSIFY_FINISHED;
+                    break;
+            }
+        }
+    }
+
+    private void OnInvalidDraw()
+    {
+
+    }
+
+    public List<Vector2> GetDrawnImageCoordinates()
+    {
+        //int[,] image = new int[80, 60];
+        List<Vector2> result = new List<Vector2>();
+        float xUnit = (topLeft.x - bottomRight.x) / 79;
+        float yUnit = (topLeft.y - bottomRight.y) / 79;
+        //int[,] deltas = new int[,] {
+        //    { 1, 1 }, { 1, 0 }, { 1, -1 },
+        //    { 0, 1 }, { 0, 0 }, { 0, -1 },
+        //    { -1, 1 }, { -1, 0 }, { -1, -1 }
+        //};
+        foreach (Vector3 point in _drawPoints)
+        {
+            int x = Mathf.RoundToInt((topLeft.x - point.x) / xUnit);
+            int y = Mathf.RoundToInt((topLeft.y - point.y) / yUnit);
+            result.Add(new Vector2(x, y));
+            //image[x, y] = 255;
+            //for (int i = 0; i < deltas.Length / 2; i++)
+            //{
+            //    int deltaX = x + deltas[i, 0];
+            //    int deltaY = y + deltas[i, 1];
+            //    if (deltaX >= 0 && deltaX < 80 && deltaY >= 0 && deltaY < 60)
+            //    {
+            //        image[deltaX, deltaY] = 255;
+            //    }
+            //}
+        }
+        return result;
+    } 
+
     // [WristDistance (+: toward the wrist/ -: away from the wrist),
     // TransverseDistance (always +),
     // VerticalDistance (always +),
@@ -169,14 +277,11 @@ public class HandPoseListener : MonoBehaviour
     private float[] GetDistancesBetweenFingerTipAndPalm(Finger finger, Hand hand)
     {
         Vector3 palmPosition = hand.PalmPosition;
-        Vector3 transversePositiveAxis = Vector3.Normalize(Vector3.Cross(hand.WristPosition - hand.PalmPosition, hand.PalmNormal));
+        Vector3 transversePositiveAxis = Vector3.Normalize(Vector3.Cross(hand.PalmNormal, hand.WristPosition - hand.PalmPosition));
         Vector3 palmNormal = Vector3.Normalize(hand.PalmNormal);
-        Vector3 palmToWrist = Vector3.Normalize(Vector3.Cross(palmNormal, transversePositiveAxis));
+        Vector3 palmToWrist = Vector3.Normalize(Vector3.Cross(transversePositiveAxis, palmNormal));
         Vector3 fingerTip = finger.TipPosition;
         float verticalDistance = Vector3.Dot(fingerTip - palmPosition, palmNormal);
-        //Vector3 horizontalPalmVector = Vector3.Normalize(Vector3.Cross(palmNormal, Vector3.Cross(fingerTip - palmPosition, palmNormal)));
-        //float horizontalDistance = Vector3.Dot(fingerTip - palmPosition, horizontalPalmVector);
-        //return new float[] { Mathf.Abs(verticalDistance), Mathf.Abs(horizontalDistance) };
         float wristDistance = Vector3.Dot(fingerTip - palmPosition, palmToWrist);
         float transverseDistance = Vector3.Dot(fingerTip - palmPosition, transversePositiveAxis);
         return new float[] { wristDistance, Mathf.Abs(transverseDistance), Mathf.Abs(verticalDistance) };
@@ -223,23 +328,29 @@ public class HandPoseListener : MonoBehaviour
         }
     }
 
-    public Vector3 GetPalmPose(){
-        
-        if(_leftHand.LastDetected!= null){
+    public Vector3 GetPalmPose()
+    {
+
+        if (_leftHand.LastDetected != null)
+        {
             return _leftHand.LastDetected.PalmPosition;
         }
-        else{
-            return new Vector3(0,0,0);
+        else
+        {
+            return new Vector3(0, 0, 0);
         }
     }
-    
-    public Vector3 GetHandDirection(){
-        
-        if(_leftHand.LastDetected!= null){
+
+    public Vector3 GetHandDirection()
+    {
+
+        if (_leftHand.LastDetected != null)
+        {
             return (_leftHand.LastDetected.PalmPosition - _leftHand.LastDetected.WristPosition).normalized;
         }
-        else{
-            return new Vector3(0,0,0);
+        else
+        {
+            return new Vector3(0, 0, 0);
         }
     }
 }
