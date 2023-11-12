@@ -21,3 +21,11 @@ public enum DrawState
     COOLING_DOWN,
 }
 
+
+public enum ClassifyType
+{
+    UNDEFINED,
+    VERTICAL,
+    HORIZONTAL,
+    UP_HAT,
+}

@@ -12261,6 +12261,7 @@ MonoBehaviour:
   mainCamera: {fileID: 41947977}
   starPrefab: {fileID: 8727276051558325967, guid: d6126aaa60f51436f937f3a9b7523e61, type: 3}
   handManager: {fileID: 2026709566}
+  brush: {fileID: 2130477140}
   debugMode: 1
   timer: 0
 --- !u!4 &1302917920
@@ -16762,6 +16763,7 @@ MonoBehaviour:
   leapProvider: {fileID: 1319286568}
   DistanceThreshold: 0.025
   CoolDownTime: 0.5
+  ShotManager: {fileID: 1302917918}
 --- !u!1001 &2029232596
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17300,6 +17302,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 9745cc6207078b34c9709065394f9780, type: 3}
   m_PrefabInstance: {fileID: 2129674424}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2130477140 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100012, guid: f39325ac0996caf48a6b2a39c8bbf4e6, type: 3}
+  m_PrefabInstance: {fileID: 1304052880}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2135479844
 PrefabInstance:

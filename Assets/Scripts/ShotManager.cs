@@ -9,7 +9,7 @@ public class ShotManager : MonoBehaviour {
     public GameObject starPrefab;
 
     public GameObject handManager;
-
+    public GameObject brush;
     private Vector3 palmPosition;
     private Vector3 shotDirection; 
 
@@ -53,18 +53,22 @@ public class ShotManager : MonoBehaviour {
     }
 
     void Update() {
-      timer += Time.deltaTime;
+      // timer += Time.deltaTime;
       if (debugMode) {
         if (Input.GetKeyDown(KeyCode.Space)) {
           DebugShoot();
         }
       }
-      if(timer>2.0f){
-        updateShotParameter();
-        handShot();
-        timer = 0.0f;
-      }
+      // if(timer>2.0f){
+      //   updateShotParameter();
+      //   handShot();
+      //   timer = 0.0f;
+      // }
       
+    }
+
+    public void DrawOnHand(Vector3 tipPos){
+      Instantiate(brush, tipPos, Quaternion.identity);
     }
     
 

@@ -16,6 +16,9 @@ public class HandPoseListener : MonoBehaviour
     DrawState _state = DrawState.EMPTY;
     public DrawState State { get => _state; }
 
+    ClassifyType _detectionType = ClassifyType.UNDEFINED;
+    public ClassifyType DetectionType { get => _detectionType; }
+
     readonly DetectedHand _leftHand = new DetectedHand();
     readonly DetectedHand _rightHand = new DetectedHand();
 
@@ -38,6 +41,7 @@ public class HandPoseListener : MonoBehaviour
     // Get an encapsulation class of:
     // 1. LastDetected: the Hand object last detected (only null before the first detection);
     // 2. Current: the Hand object currently detected (could be null when no hand is detected currently);
+    public GameObject ShotManager;
     public DetectedHand GetDetectedHand(Chirality chirality)
     {
         if (chirality == Chirality.Left)
@@ -65,6 +69,11 @@ public class HandPoseListener : MonoBehaviour
                 _state = DrawState.EMPTY;
             }
         }
+        else if(_state == DrawState.DRAWING){
+            SendRightIndexTip();
+        }
+        
+        
     }
 
     private void OnUpdateFrame(Frame frame)
@@ -163,15 +172,27 @@ public class HandPoseListener : MonoBehaviour
         print("sent!");
         _drawPoints.Clear();
         debugCube.transform.position = new Vector3(-1f, -1f, -1f);
+        ShotManager _shotManager = ShotManager.GetComponent<ShotManager>();
+        Vector3 shotDirection = GetHandDirection();
+        Vector3 palmPosition =  GetPalmPose();
+        _shotManager.Shoot(shotDirection, palmPosition);
     }
 
-    private void ProcessDrawStateChange(DrawState tentativeState, Hand rightHand, Hand hand)
+
+private void ProcessDrawStateChange(DrawState tentativeState, Hand rightHand, Hand hand)
     {
         DrawState resultingState = _state;
         if (tentativeState == DrawState.EMPTY && _state == DrawState.DRAWING)
         {
             ClassifyDrawing();
-            resultingState = DrawState.CLASSIFYING;
+            if (_detectionType == ClassifyType.UNDEFINED)
+            {
+                _state = DrawState.EMPTY;
+                _drawPoints.Clear();
+                debugCube.transform.position = new Vector3(-1f, -1f, -1f);
+                return;
+            }
+            resultingState = DrawState.CLASSIFY_FINISHED;
         }
         if (tentativeState == DrawState.EMPTY && _state == DrawState.SENDING)
         {
@@ -196,8 +217,46 @@ public class HandPoseListener : MonoBehaviour
     private void ClassifyDrawing()
     {
         List<Vector2> coords = GetDrawnImageCoordinates();
-        StartCoroutine(GetRemoteClassification(coords));
+        // Quest can only connect to the localhost of the computer via cable, but the
+        // only port has been taken up by the UltraLeap
+        //  StartCoroutine(GetRemoteClassification(coords));
+        if (coords.Count <= 5)
+        {
+            _detectionType = ClassifyType.UNDEFINED;
+            OnInvalidDraw();
+            return;
+        }
+        Vector2 direction = Vector3.Normalize(coords[coords.Count - 1] - coords[0]);
+        float sumDistance = 0f;
+        for (int i = 1; i < coords.Count - 1; i++)
+        {
+            Vector2 along = direction * Vector2.Dot(coords[i] - coords[0], direction);
+            Vector3 normal = Vector3.Normalize(Vector3.Cross(new Vector3(along.x, along.y, 0.0f), new Vector3(0f, 0f, 1f)));
+            sumDistance += Vector2.Dot(coords[i] - coords[0], new Vector2(normal.x, normal.y));
+        }
+        float avgDistance = sumDistance / (coords.Count - 2);
+        print(avgDistance);
+        if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y))
+        {
+            print("VERTICAL!");
+            _detectionType = ClassifyType.VERTICAL;
+        } else {
+            if (avgDistance > 5)
+            {
+                print("Hat!");
+                _detectionType = ClassifyType.UP_HAT;
+                return;
+            }
+            print("HORIZONTAL!");
+            _detectionType = ClassifyType.HORIZONTAL;
+        }
     }
+
+
+
+
+
+
 
     private IEnumerator GetRemoteClassification(List<Vector2> coords)
     {
@@ -351,6 +410,14 @@ public class HandPoseListener : MonoBehaviour
         else
         {
             return new Vector3(0, 0, 0);
+        }
+    }
+
+    public void SendRightIndexTip(){
+        if (_rightHand.LastDetected != null){
+            Vector3 tipPos = _rightHand.LastDetected.Fingers[1].TipPosition;
+            ShotManager _shotManager = ShotManager.GetComponent<ShotManager>();
+            _shotManager.DrawOnHand(tipPos);
         }
     }
 }
